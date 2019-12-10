@@ -1,0 +1,1074 @@
+{
+	"info": {
+		"_postman_id": "e7b2d859-5d83-46f0-a204-e1aa5a21b8e8",
+		"name": "Zavrsni zadatak",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e7eb3f2a-5e69-4560-8242-5dd6d9527ffc",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\": \"Jaric\",\n\t\"lastName\": \"Zivadin\",\n\t\"password\": \"jare1234\",\n\t\"passwordConfiramation\": \"jare1234\",\n\t\"email\": \"jare@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/register",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3a302a5-f1f8-48ff-af6a-383217fd467d",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"postman.setEnvironmentVariable(\"user_id\", jsonData.user.id);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{cutura_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"{{email}}\",\n\t\"password\": \"{{password}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/login",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "home page",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60cf6af4-00bd-4881-a31e-2cab0c19ac44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"pm.test(\"Home page should have following gradebook-data: Gradebook, Professor and Created at \", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"title\", \"professor_id\", \"created_at\");",
+							"});",
+							"",
+							"",
+							"tests[\"Pagination length is   \" + jsonData.data.length + \" gradebooks in one page\"] =  jsonData.data.length === 10;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/diaries?page=1",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create professor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3a302a5-f1f8-48ff-af6a-383217fd467d",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"//postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"//postman.setEnvironmentVariable(\"professor_id\", jsonData.id);",
+							"postman.setEnvironmentVariable(\"lastPageGbook\", jsonData.id);",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"url\":[\"http://sinemanija.com/wp-content/uploads/2015/05/Kamiond%C5%BEije..jpg\"],\n\t\"firstName\":\"{{professorFirstName}}\",\n\t\"lastName\":\"{{professorLastName}}\",\n\t\"diary_id\":\"\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/professors",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"professors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all professors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bd47d29-4a20-48b0-85ae-a05f183d7d3f",
+						"exec": [
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"var lastProfesor = jsonData[jsonData.length-1].id;",
+							"console.log(lastProfesor);",
+							"",
+							"postman.setEnvironmentVariable(\"professor_id\", lastProfesor);",
+							"",
+							"var professorFirstName = pm.environment.get(\"professorFirstName\"); ",
+							"console.log(professorFirstName);",
+							"",
+							"var lastFirstName = jsonData[jsonData.length-1].user.firstName;",
+							"console.log(lastFirstName);",
+							"",
+							"",
+							"var professorLastName = pm.environment.get(\"professorLastName\"); ",
+							"console.log(professorLastName);",
+							"",
+							"var lastLastName = jsonData[jsonData.length-1].user.lastName;",
+							"console.log(lastLastName);",
+							"",
+							"tests[\"Last proffesor in the table firstName\"] = lastFirstName   === professorFirstName;",
+							"",
+							"tests[\"Last proffesor in the table LastName\"] = lastLastName  === professorLastName;",
+							"",
+							"pm.test(\"We should get first and last name of our last created porfessor\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"firstName\", \"lastName\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/professors",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"professors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "single professor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0bd47d29-4a20-48b0-85ae-a05f183d7d3f",
+						"exec": [
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Single professor page should have firstname,last name, students\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"firstName\", \"lastName\", \"students\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/professors/{{professor_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"professors",
+						"{{professor_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create gradebook",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3a302a5-f1f8-48ff-af6a-383217fd467d",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"postman.setEnvironmentVariable(\"lastPageGbook\", jsonData.id);",
+							"",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n\t\"title\":\"{{diaryName}}\",\n\t\"professor_id\": \"{{newUser}}\"\n\t\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/diaries",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checking created gradebook",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60cf6af4-00bd-4881-a31e-2cab0c19ac44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// var lastTitle = jsonData.data[jsonData.data.length - 1].title;",
+							"// console.log(lastTitle);",
+							"",
+							"// var title = pm.environment.get(\"diaryName\");",
+							"// console.log(lastTitle);",
+							"",
+							"// pm.environment.set(\"diaryName\", lastTitle); // titile",
+							"",
+							"// tests[\"Checking gradebook title\"] = lastTitle === title;",
+							"",
+							"pm.test(\"Gradebook page contains first name, last name and title\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"firstName\", \"lastName\", \"diaryName\"); //title",
+							"}); ",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}",
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman."
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/search",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"search"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3a302a5-f1f8-48ff-af6a-383217fd467d",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\":\"Milic\",\n\t\"lastName\":\"Vukasinovic\",\n\t\"url\":[\"https://static.kupindoslike.com/Milic-Vukasinovic-%E2%80%8E%E2%80%93-Seksualno-Nemoralan-Tip_slika_O_67350543.jpg\"]\n\t\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}/students",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}",
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checking created student",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60cf6af4-00bd-4881-a31e-2cab0c19ac44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// var student_id = pm.environment.get(\"student_id\");",
+							"// console.log(student_id);",
+							"",
+							"// var lastStudent = jsonData.students[jsonData.students.length - 1].id;",
+							"// console.log(lastStudent);",
+							"",
+							"var studentFName = pm.environment.get(\"studentFName\");",
+							"console.log(studentFName);",
+							"",
+							"var studentName = jsonData.students[jsonData.students.length-1].firstName;",
+							"console.log(studentName);",
+							"",
+							"var studentLName = pm.environment.get(\"studentLName\");",
+							"console.log(studentLName);",
+							"",
+							"var studentLastName = jsonData.students[jsonData.students.length-1].lastName;",
+							"console.log(studentLastName);",
+							"",
+							"// pm.environment.set(\"student_id\", lastStudent);",
+							"pm.environment.set(\"studentFName\", studentName);",
+							"pm.environment.set(\"studentLName\", studentLastName);",
+							"",
+							"// tests[\"Checking new student\"] = lastStudent === student_id;",
+							"tests [\"firstName Milic\"] = studentName === studentFName;",
+							"tests [\"lastName Vukasinovic\"] = studentLastName === studentLName;",
+							"",
+							"",
+							"pm.test(\"Checking created student\", function () {",
+							"    pm.expect(studentName).to.include(\"Milic\", \"Vukasinovic\");",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "my bookpage comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e3a302a5-f1f8-48ff-af6a-383217fd467d",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"comment_id\", jsonData.id);",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\n\t\"text\":\"My first comments\",\n\t\"user_id\":\"{{newUser}}\",\n\t\"diary_id\":\"{{lastPageGbook}}\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}/comments",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checking comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "60cf6af4-00bd-4881-a31e-2cab0c19ac44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"var lastComment= jsonData.comments[jsonData.comments.length - 1].id;",
+							"console.log(lastComment);",
+							"",
+							"",
+							"var comment_id = pm.environment.get(\"comment_id\");",
+							"console.log(comment_id);",
+							"",
+							"pm.environment.set(\"comment_id\", lastComment);",
+							"",
+							"tests[\"Checking new comment\"] = lastComment === comment_id;",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}",
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman."
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit Gradebook",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "43f9c3aa-a727-4dcf-ae86-7605c7896791",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var responseTime = pm.environment.get(\"response_time\");",
+							"var responseTimeNumber = Number(responseTime);",
+							"",
+							"pm.test(\"Response time is less than \" + responseTimeNumber + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(responseTimeNumber);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\":\"{{lastPageGbook}}\",\n\t\"title\":\"{{editDiaryName}}\",\n\t\"professor_id\":\"{{professor_id}}\"\n\t\n}\n"
+				},
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}?",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete comment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6277e836-e561-42ff-8bed-e543fd317573",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/comments/{{comment_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"comments",
+						"{{comment_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete Gradebook",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6277e836-e561-42ff-8bed-e543fd317573",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/diaries/{{lastPageGbook}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"diaries",
+						"{{lastPageGbook}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
